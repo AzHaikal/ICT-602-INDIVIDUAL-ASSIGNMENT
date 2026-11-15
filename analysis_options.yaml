@@ -1,0 +1,16 @@
+analyzer:
+  errors:
+    invalid_use_of_visible_for_testing_member: warning
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+
+linter:
+  rules:
+    prefer_const_constructors: true
+    avoid_print: true
