@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-//import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'baggage_calculator.dart';
 
@@ -12,7 +12,7 @@ const String matricNumber = '2024252138';
 const String courseName = 'ICT602';
 // Replace this with the URL of YOUR public GitHub code repository.
 // The current link opens GitHub's main website, not your own source repository.
-const String githubRepositoryUrl = 'https://github.com/';
+const String githubRepositoryUrl = 'https://github.com/AzHaikal/ICT-602-INDIVIDUAL-ASSIGNMENT';
 // -----------------------------------------------------------------------------
 
 void main() {
@@ -563,20 +563,20 @@ class AboutPage extends StatelessWidget {
       );
       return;
     }
-    //try {
-    //  final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
-    //  if (!launched && context.mounted) {
-    //    ScaffoldMessenger.of(context).showSnackBar(
-    //      const SnackBar(content: Text('Unable to open GitHub link.')),
-    //    );
-    //  }
-    //} catch (_) {
-    //  if (context.mounted) {
-    //    ScaffoldMessenger.of(context).showSnackBar(
-    //      const SnackBar(content: Text('Unable to open GitHub link.')),
-    //    );
-    //  }
-    //}
+    try {
+      final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      if (!launched && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Unable to open GitHub link.')),
+        );
+      }
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Unable to open GitHub link.')),
+        );
+      }
+    }
   }
 
   @override
