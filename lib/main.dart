@@ -378,21 +378,24 @@ class AboutPage extends StatelessWidget {
               Card(
                 elevation: 1.5,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      const Text(githubUrl, textAlign: TextAlign.center, style: TextStyle(fontSize: 12, color: Colors.blueGrey)),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton.icon(
-                          onPressed: () => _launchGitHub(context),
-                          icon: const Icon(Icons.open_in_browser),
-                          label: const Text('Open GitHub Repository'),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(12),
+                  onTap: () => _launchGitHub(context),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.link, color: Colors.blue, size: 18),
+                        SizedBox(width: 8),
+                        Flexible(
+                          child: Text(
+                            githubUrl,
+                            style: TextStyle(color: Colors.blue, fontSize: 12.5, decoration: TextDecoration.underline),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
