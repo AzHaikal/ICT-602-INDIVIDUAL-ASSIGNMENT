@@ -28,12 +28,7 @@ class BaggageApp extends StatelessWidget {
           primary: const Color(0xFF103B66),
         ),
         scaffoldBackgroundColor: const Color(0xFFF4F7FB),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF103B66),
-          foregroundColor: Colors.white,
-          centerTitle: true,
-          elevation: 2,
-        ),
+        appBarTheme: const AppBarTheme(backgroundColor: Color(0xFF103B66), foregroundColor: Colors.white, centerTitle: false, elevation: 2),
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           fillColor: Colors.white,
@@ -73,34 +68,13 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
             initialValue: _currentIndex,
             onSelected: (index) => setState(() => _currentIndex = index),
             itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 0,
-                child: Row(
-                  children: [
-                    Icon(Icons.calculate, color: _currentIndex == 0 ? const Color(0xFF008F83) : const Color(0xFF103B66)),
-                    const SizedBox(width: 10),
-                    Text('Home', style: TextStyle(fontWeight: _currentIndex == 0 ? FontWeight.bold : FontWeight.normal)),
-                  ],
-                ),
-              ),
-              PopupMenuItem(
-                value: 1,
-                child: Row(
-                  children: [
-                    Icon(Icons.info, color: _currentIndex == 1 ? const Color(0xFF008F83) : const Color(0xFF103B66)),
-                    const SizedBox(width: 10),
-                    Text('About', style: TextStyle(fontWeight: _currentIndex == 1 ? FontWeight.bold : FontWeight.normal)),
-                  ],
-                ),
-              ),
+              _buildMenuItem(0, Icons.calculate, 'Home'),
+              _buildMenuItem(1, Icons.info, 'About'),
             ],
             child: Container(
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(8),
-              ),
+              decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
               child: Row(
                 children: [
                   Icon(_currentIndex == 0 ? Icons.calculate : Icons.info, size: 18, color: Colors.white),
@@ -114,6 +88,20 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
         ],
       ),
       body: _pages[_currentIndex],
+    );
+  }
+
+  PopupMenuItem<int> _buildMenuItem(int val, IconData icon, String text) {
+    final active = _currentIndex == val;
+    return PopupMenuItem(
+      value: val,
+      child: Row(
+        children: [
+          Icon(icon, color: active ? const Color(0xFF008F83) : const Color(0xFF103B66)),
+          const SizedBox(width: 10),
+          Text(text, style: TextStyle(fontWeight: active ? FontWeight.bold : FontWeight.normal)),
+        ],
+      ),
     );
   }
 }
@@ -265,12 +253,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                                 onPressed: _calculate,
                                 icon: const Icon(Icons.calculate),
                                 label: const Text('Calculate'),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF103B66),
-                                  foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(vertical: 14),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                ),
+                                style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF103B66), foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 14)),
                               ),
                             ),
                             const SizedBox(width: 10),
@@ -278,10 +261,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                               onPressed: _reset,
                               icon: const Icon(Icons.refresh),
                               label: const Text('Reset'),
-                              style: OutlinedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical: 14),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                              ),
+                              style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 14)),
                             ),
                           ],
                         ),
@@ -306,19 +286,14 @@ class _CalculatorPageState extends State<CalculatorPage> {
                         const Text('Calculation Summary', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF103B66))),
                         const Divider(height: 20),
                         _buildOutputRow('1. Excess Baggage Weight:', '${_result!.excessWeightKg.toStringAsFixed(2)} kg'),
-                        const SizedBox(height: 8),
                         _buildOutputRow('2. Excess Baggage Charge:', 'RM ${_result!.excessChargeRm.toStringAsFixed(2)}'),
-                        const SizedBox(height: 8),
                         _buildOutputRow('Service Tax (8%):', 'RM ${_result!.serviceTaxRm.toStringAsFixed(2)}'),
                         const Divider(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text('3. Total Amount Payable:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                            Text(
-                              'RM ${_result!.totalPayableRm.toStringAsFixed(2)}',
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xFF008F83)),
-                            ),
+                            Text('RM ${_result!.totalPayableRm.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xFF008F83))),
                           ],
                         ),
                       ],
@@ -333,12 +308,15 @@ class _CalculatorPageState extends State<CalculatorPage> {
   }
 
   Widget _buildOutputRow(String label, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(label, style: const TextStyle(color: Colors.black87)),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.w600)),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: const TextStyle(color: Colors.black87)),
+          Text(value, style: const TextStyle(fontWeight: FontWeight.w600)),
+        ],
+      ),
     );
   }
 }
@@ -382,14 +360,14 @@ class AboutPage extends StatelessWidget {
                 elevation: 1.5,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                  padding: EdgeInsets.symmetric(vertical: 4.0),
                   child: Column(
                     children: [
-                      ListTile(leading: Icon(Icons.person, color: Color(0xFF008F83)), title: Text('Name'), subtitle: Text(authorName, style: TextStyle(fontWeight: FontWeight.w600))),
+                      ListTile(dense: true, leading: Icon(Icons.person, color: Color(0xFF008F83)), title: Text('Name'), subtitle: Text(authorName, style: TextStyle(fontWeight: FontWeight.w600))),
                       Divider(height: 1),
-                      ListTile(leading: Icon(Icons.badge, color: Color(0xFF008F83)), title: Text('Matric Number'), subtitle: Text(matricNumber, style: TextStyle(fontWeight: FontWeight.w600))),
+                      ListTile(dense: true, leading: Icon(Icons.badge, color: Color(0xFF008F83)), title: Text('Matric Number'), subtitle: Text(matricNumber, style: TextStyle(fontWeight: FontWeight.w600))),
                       Divider(height: 1),
-                      ListTile(leading: Icon(Icons.school, color: Color(0xFF008F83)), title: Text('Course'), subtitle: Text(courseName, style: TextStyle(fontWeight: FontWeight.w600))),
+                      ListTile(dense: true, leading: Icon(Icons.school, color: Color(0xFF008F83)), title: Text('Course'), subtitle: Text(courseName, style: TextStyle(fontWeight: FontWeight.w600))),
                     ],
                   ),
                 ),
