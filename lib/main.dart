@@ -47,7 +47,7 @@ class BaggageApp extends StatelessWidget {
 }
 
 // -----------------------------------------------------------------------------
-// 2. NAVIGATION MENU (Home & About)
+// 2. NAVIGATION MENU (Dropdown: Home & About)
 // -----------------------------------------------------------------------------
 class MainNavigationShell extends StatefulWidget {
   const MainNavigationShell({super.key});
@@ -65,17 +65,55 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
     return Scaffold(
       appBar: AppBar(
         leading: const Icon(Icons.flight_takeoff_rounded),
-        title: const Text('SkyBaggage Calculator', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-      ),
-      body: _pages[_currentIndex],
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (index) => setState(() => _currentIndex = index),
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.calculate_outlined), selectedIcon: Icon(Icons.calculate), label: 'Home'),
-          NavigationDestination(icon: Icon(Icons.info_outline), selectedIcon: Icon(Icons.info), label: 'About'),
+        title: const Text('SkyBaggage', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+        actions: [
+          // Dropdown Navigation Menu
+          PopupMenuButton<int>(
+            tooltip: 'Navigation Menu',
+            initialValue: _currentIndex,
+            onSelected: (index) => setState(() => _currentIndex = index),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 0,
+                child: Row(
+                  children: [
+                    Icon(Icons.calculate, color: _currentIndex == 0 ? const Color(0xFF008F83) : const Color(0xFF103B66)),
+                    const SizedBox(width: 10),
+                    Text('Home', style: TextStyle(fontWeight: _currentIndex == 0 ? FontWeight.bold : FontWeight.normal)),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 1,
+                child: Row(
+                  children: [
+                    Icon(Icons.info, color: _currentIndex == 1 ? const Color(0xFF008F83) : const Color(0xFF103B66)),
+                    const SizedBox(width: 10),
+                    Text('About', style: TextStyle(fontWeight: _currentIndex == 1 ? FontWeight.bold : FontWeight.normal)),
+                  ],
+                ),
+              ),
+            ],
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Icon(_currentIndex == 0 ? Icons.calculate : Icons.info, size: 18, color: Colors.white),
+                  const SizedBox(width: 6),
+                  Text(_currentIndex == 0 ? 'Home' : 'About', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+                  const Icon(Icons.arrow_drop_down, color: Colors.white),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
+      body: _pages[_currentIndex],
     );
   }
 }
