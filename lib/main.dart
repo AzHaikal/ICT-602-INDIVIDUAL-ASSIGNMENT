@@ -23,15 +23,11 @@ class BaggageApp extends StatelessWidget {
       title: 'SkyBaggage Calculator',
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF008F83),
-          primary: const Color(0xFF103B66),
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF008F83), primary: const Color(0xFF103B66)),
         scaffoldBackgroundColor: const Color(0xFFF4F7FB),
         appBarTheme: const AppBarTheme(backgroundColor: Color(0xFF103B66), foregroundColor: Colors.white, centerTitle: false, elevation: 2),
         inputDecorationTheme: InputDecorationTheme(
-          filled: true,
-          fillColor: Colors.white,
+          filled: true, fillColor: Colors.white,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         ),
@@ -62,14 +58,13 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
         leading: const Icon(Icons.flight_takeoff_rounded),
         title: const Text('SkyBaggage', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
         actions: [
-          // Dropdown Navigation Menu
           PopupMenuButton<int>(
             tooltip: 'Navigation Menu',
             initialValue: _currentIndex,
             onSelected: (index) => setState(() => _currentIndex = index),
             itemBuilder: (context) => [
-              _buildMenuItem(0, Icons.calculate, 'Home'),
-              _buildMenuItem(1, Icons.info, 'About'),
+              PopupMenuItem(value: 0, child: Row(children: [Icon(Icons.calculate, color: _currentIndex == 0 ? const Color(0xFF008F83) : const Color(0xFF103B66)), const SizedBox(width: 10), Text('Home', style: TextStyle(fontWeight: _currentIndex == 0 ? FontWeight.bold : FontWeight.normal))])),
+              PopupMenuItem(value: 1, child: Row(children: [Icon(Icons.info, color: _currentIndex == 1 ? const Color(0xFF008F83) : const Color(0xFF103B66)), const SizedBox(width: 10), Text('About', style: TextStyle(fontWeight: _currentIndex == 1 ? FontWeight.bold : FontWeight.normal))])),
             ],
             child: Container(
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
@@ -88,20 +83,6 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
         ],
       ),
       body: _pages[_currentIndex],
-    );
-  }
-
-  PopupMenuItem<int> _buildMenuItem(int val, IconData icon, String text) {
-    final active = _currentIndex == val;
-    return PopupMenuItem(
-      value: val,
-      child: Row(
-        children: [
-          Icon(icon, color: active ? const Color(0xFF008F83) : const Color(0xFF103B66)),
-          const SizedBox(width: 10),
-          Text(text, style: TextStyle(fontWeight: active ? FontWeight.bold : FontWeight.normal)),
-        ],
-      ),
     );
   }
 }
@@ -131,7 +112,6 @@ class _CalculatorPageState extends State<CalculatorPage> {
     super.dispose();
   }
 
-  // Good Design Practice: Input validation with error messages
   String? _validateInput(String? value, String fieldName) {
     if (value == null || value.trim().isEmpty) return 'Please enter $fieldName.';
     final num = double.tryParse(value.trim());
@@ -143,13 +123,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
   void _calculate() {
     if (!_formKey.currentState!.validate()) return;
     FocusScope.of(context).unfocus();
-    setState(() {
-      _result = calculateBaggage(
-        baggageWeightKg: double.parse(_weightController.text.trim()),
-        ticketClass: _ticketClass,
-        excessRatePerKgRm: double.parse(_rateController.text.trim()),
-      );
-    });
+    setState(() => _result = calculateBaggage(
+      baggageWeightKg: double.parse(_weightController.text.trim()),
+      ticketClass: _ticketClass,
+      excessRatePerKgRm: double.parse(_rateController.text.trim()),
+    ));
   }
 
   void _reset() {
@@ -157,10 +135,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
     _weightController.clear();
     _rateController.clear();
     FocusScope.of(context).unfocus();
-    setState(() {
-      _ticketClass = TicketClass.economy;
-      _result = null;
-    });
+    setState(() { _ticketClass = TicketClass.economy; _result = null; });
   }
 
   @override
@@ -245,23 +220,27 @@ class _CalculatorPageState extends State<CalculatorPage> {
                         ),
                         const SizedBox(height: 18),
 
-                        // Calculate and Reset Action Buttons
+                        // Calculate and Reset Action Buttons (Fix: Balanced & No Overflow)
                         Row(
                           children: [
                             Expanded(
+                              flex: 3,
                               child: ElevatedButton.icon(
                                 onPressed: _calculate,
-                                icon: const Icon(Icons.calculate),
-                                label: const Text('Calculate'),
-                                style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF103B66), foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 14)),
+                                icon: const Icon(Icons.calculate, size: 20),
+                                label: const FittedBox(fit: BoxFit.scaleDown, child: Text('Calculate')),
+                                style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF103B66), foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8)),
                               ),
                             ),
                             const SizedBox(width: 10),
-                            OutlinedButton.icon(
-                              onPressed: _reset,
-                              icon: const Icon(Icons.refresh),
-                              label: const Text('Reset'),
-                              style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 14)),
+                            Expanded(
+                              flex: 2,
+                              child: OutlinedButton.icon(
+                                onPressed: _reset,
+                                icon: const Icon(Icons.refresh, size: 18),
+                                label: const FittedBox(fit: BoxFit.scaleDown, child: Text('Reset')),
+                                style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 4)),
+                              ),
                             ),
                           ],
                         ),
@@ -345,7 +324,6 @@ class AboutPage extends StatelessWidget {
           constraints: const BoxConstraints(maxWidth: 500),
           child: Column(
             children: [
-              // 1. Application Icon
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Image.asset('assets/app_icon.png', width: 85, height: 85, fit: BoxFit.cover),
@@ -355,7 +333,7 @@ class AboutPage extends StatelessWidget {
               const Text('Excess Baggage Fee Estimator', style: TextStyle(color: Colors.black54)),
               const SizedBox(height: 18),
 
-              // 2. Author Details Card
+              // Author Details Card
               Card(
                 elevation: 1.5,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -374,7 +352,7 @@ class AboutPage extends StatelessWidget {
               ),
               const SizedBox(height: 14),
 
-              // 3. Clickable GitHub URL
+              // Clickable GitHub URL
               Card(
                 elevation: 1.5,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -401,7 +379,7 @@ class AboutPage extends StatelessWidget {
               ),
               const SizedBox(height: 18),
 
-              // 4. Copyright Notice
+              // Copyright Notice
               const Text(
                 'Copyright © 2026 AZFAR HAIKAL BIN MOHD ARIZAL\nAll rights reserved • ICT602 Mobile Technology',
                 textAlign: TextAlign.center,
